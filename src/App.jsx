@@ -1,10 +1,10 @@
 import React from "react";
+import Hero from "./Component/Hero.jsx";
 
 const App = () => {
   return (
     <div>
-      <h1>Hello</h1>
-      <h2>VivoStat</h2>
+      <Hero />
     </div>
   );
 };
