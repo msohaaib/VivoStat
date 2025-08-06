@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import facebook from "../assets/HeroIcons/facebook.svg";
 import instagram from "../assets/HeroIcons/instagram.svg";
 import linkedin from "../assets/HeroIcons/linkedin.svg";
-import pinterest from "../assets/HeroIcons/pintrest.svg";
+import pinterest from "../assets/HeroIcons/pinterest.svg";
 import tiktok from "../assets/HeroIcons/tiktok.svg";
 import twitter from "../assets/HeroIcons/twitter.svg";
 import youtube from "../assets/HeroIcons/youtube.svg";
@@ -48,10 +48,10 @@ const ParallaxEffect = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[70vh] overflow-hidden bg-[#9ca5c0]">
-      <h1 className="absolute top-1/2 left-1/2 text-white font-bold uppercase text-[70px] opacity-20 transform -translate-x-1/2 -translate-y-[47%] z-10">
-        Parallax
-      </h1>
+    <div className="relative w-full h-[70vh] overflow-hidden bg-gray-400">
+      <div className="absolute top-1/3 text-center content-center left-1/2 text-gray-900 font-bold uppercase text-5xl transform -translate-x-1/2 -translate-y-[47%] z-50 pr-30">
+        <p>Empower Your Social Media Success</p>
+      </div>
 
       {/* Layer 1 - Closest with low blur */}
       <img
@@ -101,7 +101,7 @@ const ParallaxEffect = () => {
       <img
         ref={layer5Ref}
         src={pinterest}
-        alt="YouTube"
+        alt="Pinterest"
         className="w-32 h-32 absolute top-[60%] left-[10%] transition-transform duration-75 filter blur-[4px]"
       />
     </div>
