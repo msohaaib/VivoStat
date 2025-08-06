@@ -48,8 +48,8 @@ const ParallaxEffect = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[70vh] overflow-hidden bg-gray-400">
-      <div className="absolute top-1/3 text-center content-center left-1/2 text-gray-900 font-bold uppercase text-5xl transform -translate-x-1/2 -translate-y-[47%] z-50 pr-30">
+    <div className="relative w-full h-[75vh] overflow-hidden bg-gray-100">
+      <div className="absolute top-1/3 text-center content-center left-1/2 text-gray-900 font-bold uppercase text-5xl transform -translate-x-1/2 -translate-y-[47%] z-10 pr-30">
         <p>Empower Your Social Media Success</p>
       </div>
 
