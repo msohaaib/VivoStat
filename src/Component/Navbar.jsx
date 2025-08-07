@@ -14,6 +14,7 @@ import MultiChannelComparison from "../assets/NavbarIcons/multiChannelComparison
 import CustomizeDashboard from "../assets/NavbarIcons/CustomizeDashboard.png";
 import AIPoweredSuggestion from "../assets/NavbarIcons/AIPoweredSuggestions.png";
 import { FaChevronDown } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const NavLink = [
   {
@@ -126,15 +127,22 @@ const NavLink = [
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null);
-  const dropdownRef = useRef(null);
 
   const toggleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const dropdownRefs = useRef([]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRefs.current.every((ref) => !ref || !ref.contains(event.target))
+      ) {
         setDropdownOpen(null);
       }
     };
@@ -168,38 +176,61 @@ const Navbar = () => {
                 <div
                   key={link.id}
                   className="relative"
-                  ref={link.dropdown ? dropdownRef : null}
+                  ref={
+                    link.dropdown
+                      ? (el) => (dropdownRefs.current[link.id] = el)
+                      : null
+                  }
                 >
                   {!link.dropdown ? (
-                    <a
-                      href={link.path}
+                    <Link
+                      to={link.path}
+                      onClick={closeMenu}
                       className="block text-[rgb(33,49,48)] hover:text-blue-400 font-semibold"
                       aria-label={link.name}
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   ) : (
                     <div className="relative">
-                      <button
-                        onClick={() => toggleDropdown(link.id)}
-                        className="flex items-center text-[rgb(33,49,48)] font-semibold hover:text-blue-400"
-                        aria-controls={`dropdown-${link.id}`}
-                        aria-expanded={dropdownOpen === link.id}
-                        aria-label={`Toggle ${link.name} dropdown`}
-                      >
-                        {link.name}
-                        <FaChevronDown
-                          className={`ml-2 w-4 h-4 transform transition-transform duration-200 ${
-                            dropdownOpen === link.id ? "rotate-180" : ""
-                          }`}
-                          aria-hidden="true"
-                        />
-                      </button>
-
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => toggleDropdown(link.id)}
+                          className="lg:hidden flex items-center text-[rgb(33,49,48)] font-semibold hover:text-blue-400"
+                          aria-controls={`dropdown-${link.id}`}
+                          aria-expanded={dropdownOpen === link.id}
+                          aria-label={`Toggle ${link.name} dropdown`}
+                        >
+                          {link.name}
+                          <FaChevronDown
+                            className={`ml-2 w-4 h-4 transform transition-transform duration-200 ${
+                              dropdownOpen === link.id ? "rotate-180" : ""
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        <Link
+                          to={link.path}
+                          onMouseEnter={() => toggleDropdown(link.id)}
+                          onMouseLeave={() => setDropdownOpen(null)}
+                          className="hidden lg:flex items-center text-[rgb(33,49,48)] font-semibold hover:text-blue-400"
+                          aria-controls={`dropdown-${link.id}`}
+                          aria-expanded={dropdownOpen === link.id}
+                          aria-label={link.name}
+                        >
+                          {link.name}
+                          <FaChevronDown
+                            className={`ml-2 w-4 h-4 transform transition-transform duration-200 ${
+                              dropdownOpen === link.id ? "rotate-180" : ""
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </div>
                       {dropdownOpen === link.id && (
                         <div
                           id={`dropdown-${link.id}`}
-                          className="absolute left-0 mt-2 w-full sm:w-[28rem] md:w-[42rem] bg-[rgb(255,255,250)] text-[rgb(33,49,48)] rounded-b-lg shadow-lg p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 max-h-[60vh] overflow-y-auto z-50 sm:left-0 md:left-1/2 md:-translate-x-1/2"
+                          className="relative lg:absolute left-0 mt-2 w-full sm:w-[28rem] md:w-[42rem] bg-[rgb(255,255,250)] text-[rgb(33,49,48)] rounded-b-lg shadow-lg p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 max-h-[60vh] overflow-y-auto z-50 sm:left-0 md:left-1/2 md:-translate-x-1/2"
                         >
                           {link.dropdown.map((dropdownItem, index) => (
                             <div
@@ -234,20 +265,22 @@ const Navbar = () => {
               ))}
               {/* Mobile/Tablet Auth Buttons (inside menu) */}
               <div className="lg:hidden mt-4 space-y-3">
-                <a
-                  href="/login"
+                <Link
+                  onClick={closeMenu}
+                  to="/login"
                   className="block text-[rgb(33,49,48)] border border-[rgb(33,49,48)] py-2 px-4 rounded hover:bg-[rgb(33,49,48)] hover:text-[rgb(255,255,250)] text-center transition-colors duration-300"
                   aria-label="Login"
                 >
                   Login
-                </a>
-                <a
-                  href="/signup"
+                </Link>
+                <Link
+                  onClick={closeMenu}
+                  to="/signup"
                   className="block bg-[rgb(33,49,48)] text-[rgb(255,255,250)] py-2 px-4 rounded hover:bg-blue-600 text-center transition-colors duration-300"
                   aria-label="Get Started Now"
                 >
                   Get Started Now
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -258,20 +291,20 @@ const Navbar = () => {
               isMenuOpen ? "sm:hidden" : ""
             } lg:order-3 lg:flex lg:space-x-4`}
           >
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="text-[rgb(33,49,48)] border border-[rgb(33,49,48)] px-4 py-2 rounded font-semibold hover:bg-[rgb(33,49,48)] hover:text-[rgb(255,255,250)] transition-colors duration-300"
               aria-label="Login"
             >
               Login
-            </a>
-            <a
-              href="/signup"
+            </Link>
+            <Link
+              to="/signup"
               className="bg-[rgb(33,49,48)] w-max text-[rgb(255,255,250)] px-4 py-2 rounded font-semibold hover:bg-blue-600 transition-colors duration-300"
               aria-label="Get Started Now"
             >
               Get Started Now
-            </a>
+            </Link>
           </div>
 
           {/* Hamburger Menu (right, visible for md and below) */}
