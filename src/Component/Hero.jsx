@@ -7,6 +7,8 @@ import linkedin from "../assets/HeroIcons/linkedin.svg";
 import pinterest from "../assets/HeroIcons/pinterest.svg";
 import tiktok from "../assets/HeroIcons/tiktok.svg";
 import youtube from "../assets/HeroIcons/youtube.svg";
+import PrimaryButton from "./PrimaryButton";
+import { FiArrowUpRight } from "react-icons/fi";
 
 const ParallaxEffect = () => {
   // Refs for each icon layer
@@ -58,13 +60,9 @@ const ParallaxEffect = () => {
           Unlock real-time analytics, AI insights, and easy scheduling to boost
           engagement with <span className="font-bold">VivoStat</span>.
         </p>
-        <a
-          href="/signup"
-          className="inline-block bg-[rgb(33,49,48)] text-[rgb(255,255,250)] px-6 py-3 rounded font-semibold hover:bg-blue-600 transition-colors duration-300"
-          aria-label="Get Started Now"
-        >
-          Get Started Now
-        </a>
+        <PrimaryButton href="/signup" aria-label="Get Started Now">
+          Get Started Now <FiArrowUpRight className="inline align-center" />
+        </PrimaryButton>
       </div>
 
       {/* Layer 1 - Closest with low blur */}

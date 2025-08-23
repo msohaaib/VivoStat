@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import NavLink from "../data/Navlinks";
+import PrimaryButton from "./PrimaryButton";
+import SecondaryButton from "./SecondaryButton";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,13 +37,13 @@ const Navbar = () => {
       <div className="max-w-screen-xl mx-auto px-4 sm:px-5 lg:px-6">
         <div className="flex items-center justify-between">
           {/* Logo (left) */}
-          <a
-            href="/"
+          <Link
+            to="/"
             className="text-2xl font-bold text-[rgb(33,49,48)] order-1"
             aria-label="VivoStat Logo"
           >
             VivoStat
-          </a>
+          </Link>
 
           {/* Nav Links (center, lg only) */}
           <div
@@ -66,7 +68,7 @@ const Navbar = () => {
                     <Link
                       to={link.path}
                       onClick={closeMenu}
-                      className="block text-[rgb(33,49,48)] hover:text-blue-400 font-semibold"
+                      className="block text-[rgb(33,49,48)] hover:text-[rgb(87,90,90)] font-semibold"
                       aria-label={link.name}
                     >
                       {link.name}
@@ -76,7 +78,7 @@ const Navbar = () => {
                       <div className="flex items-center">
                         <button
                           onClick={() => toggleDropdown(link.id)}
-                          className="lg:hidden flex items-center text-[rgb(33,49,48)] font-semibold hover:text-blue-400"
+                          className="lg:hidden flex items-center text-[rgb(33,49,48)] font-semibold hover:text-[rgb(87,90,90)]"
                           aria-controls={`dropdown-${link.id}`}
                           aria-expanded={dropdownOpen === link.id}
                           aria-label={`Toggle ${link.name} dropdown`}
@@ -91,7 +93,7 @@ const Navbar = () => {
                         </button>
                         <Link
                           to={link.path}
-                          className="hidden lg:flex items-center text-[rgb(33,49,48)] font-semibold hover:text-blue-400"
+                          className="hidden lg:flex items-center text-[rgb(33,49,48)] font-semibold hover:text-[rgb(87,90,90)]"
                           aria-controls={`dropdown-${link.id}`}
                           aria-expanded={dropdownOpen === link.id}
                           aria-label={link.name}
@@ -122,13 +124,13 @@ const Navbar = () => {
                                   className="w-5 sm:w-6 h-5 sm:h-6"
                                   style={{ fill: "currentColor" }}
                                 />
-                                <a
-                                  href={dropdownItem.path || "#"}
-                                  className="font-semibold hover:text-blue-400"
+                                <Link
+                                  to={dropdownItem.path || "#"}
+                                  className="font-semibold hover:text-[rgb(87,90,90)]"
                                   aria-label={dropdownItem.name}
                                 >
                                   {dropdownItem.name}
-                                </a>
+                                </Link>
                               </div>
                               <p className="text-sm leading-snug">
                                 {dropdownItem.description}
@@ -143,22 +145,21 @@ const Navbar = () => {
               ))}
               {/* Mobile/Tablet Auth Buttons (inside menu) */}
               <div className="lg:hidden mt-4 space-y-3">
-                <Link
+                <SecondaryButton
                   onClick={closeMenu}
                   to="/login"
-                  className="block text-[rgb(33,49,48)] border border-[rgb(33,49,48)] py-2 px-4 rounded hover:bg-[rgb(33,49,48)] hover:text-[rgb(255,255,250)] text-center transition-colors duration-300"
+                  className="w-full text-center rounded font-semibold"
                   aria-label="Login"
                 >
                   Login
-                </Link>
-                <Link
+                </SecondaryButton>
+                <SecondaryButton
                   onClick={closeMenu}
                   to="/signup"
-                  className="block bg-[rgb(33,49,48)] text-[rgb(255,255,250)] py-2 px-4 rounded hover:bg-blue-600 text-center transition-colors duration-300"
                   aria-label="Get Started Now"
                 >
                   Get Started Now
-                </Link>
+                </SecondaryButton>
               </div>
             </div>
           </div>
@@ -169,27 +170,19 @@ const Navbar = () => {
               isMenuOpen ? "sm:hidden" : ""
             } lg:order-3 lg:flex lg:space-x-4`}
           >
-            <Link
-              to="/login"
-              className="text-[rgb(33,49,48)] border border-[rgb(33,49,48)] px-4 py-2 rounded font-semibold hover:bg-[rgb(33,49,48)] hover:text-[rgb(255,255,250)] transition-colors duration-300"
-              aria-label="Login"
-            >
+            <SecondaryButton to="/login" aria-label="Login">
               Login
-            </Link>
-            <Link
-              to="/signup"
-              className="bg-[rgb(33,49,48)] w-max text-[rgb(255,255,250)] px-4 py-2 rounded font-semibold hover:bg-blue-600 transition-colors duration-300"
-              aria-label="Get Started Now"
-            >
+            </SecondaryButton>
+            <PrimaryButton to="/signup" aria-label="Get Started Now">
               Get Started Now
-            </Link>
+            </PrimaryButton>
           </div>
 
           {/* Hamburger Menu (right, visible for md and below) */}
           <div className="lg:hidden order-4">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-[rgb(33,49,48)] hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+              className="p-2 text-[rgb(33,49,48)] hover:text-[rgb(87,90,90)] rounded"
               aria-controls="mobile-menu"
               aria-expanded={isMenuOpen}
               aria-label="Toggle menu"

@@ -2,29 +2,58 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import PrimaryButton from "./PrimaryButton";
 motion;
 
 const ChannelsSection = () => {
   const channels = [
     {
-      imgUrl: "/src/assets/HeroIcons/facebook.svg",
-      subheading: "Real-Time Analytics",
+      imgUrl: "/src/assets/featureSection/facebook.jpg",
+      subheading: "Real-Time Audience Insights",
       heading: "Facebook",
       path: "/channel/facebook",
     },
     {
-      imgUrl:
-        "https://images.unsplash.com/photo-1530893609608-32a9af3aa95c?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      subheading: "Visual Engagement",
+      imgUrl: "/src/assets/featureSection/Instagram.jpg",
+      subheading: "Visual Performance Tracking",
       heading: "Instagram",
       path: "/channel/instagram",
     },
     {
-      imgUrl:
-        "https://images.unsplash.com/photo-1504610926078-a1611febcad3?q=80&w=2416&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      subheading: "Professional Insights",
+      imgUrl: "/src/assets/featureSection/linkedin.jpg",
+      subheading: "Professional Network Analytics",
       heading: "LinkedIn",
       path: "/channel/linkedin",
+    },
+    {
+      imgUrl: "/src/assets/featureSection/Tiktok.jpg",
+      subheading: "Trend-Driven Engagement",
+      heading: "TikTok",
+      path: "/channel/tiktok",
+    },
+    {
+      imgUrl: "/src/assets/featureSection/twitter.jpg",
+      subheading: "Instant Trend Monitoring",
+      heading: "Twitter",
+      path: "/channel/twitter",
+    },
+    {
+      imgUrl: "/src/assets/featureSection/Youtube.jpg",
+      subheading: "Video Performance Metrics",
+      heading: "YouTube",
+      path: "/channel/youtube",
+    },
+    {
+      imgUrl: "/src/assets/featureSection/threads.jpg",
+      subheading: "Conversation Analytics",
+      heading: "Threads",
+      path: "/channel/threads",
+    },
+    {
+      imgUrl: "/src/assets/featureSection/pinterest.jpg",
+      subheading: "Visual Inspiration Insights",
+      heading: "Pinterest",
+      path: "/channel/pinterest",
     },
   ];
 
@@ -134,13 +163,12 @@ const ChannelContent = ({ path }) => (
         performance, schedule posts, and gain actionable insights to boost your
         social media presence.
       </p>
-      <Link
+      <PrimaryButton
         to={path}
-        className="inline-block rounded bg-[rgb(33,49,48)] px-6 py-3 text-xl text-[rgb(255,255,250)] transition-colors hover:bg-blue-600 md:w-fit"
         aria-label={`Learn more about ${path.split("/").pop()} channel`}
       >
         Learn More <FiArrowUpRight className="inline" />
-      </Link>
+      </PrimaryButton>
     </div>
   </div>
 );
