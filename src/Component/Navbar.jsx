@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import NavLink from "../data/Navlinks";
 import PrimaryButton from "./PrimaryButton";
 import SecondaryButton from "./SecondaryButton";
+import logo from "../assets/Logo/logo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,10 +40,11 @@ const Navbar = () => {
           {/* Logo (left) */}
           <Link
             to="/"
-            className="text-2xl font-bold text-[rgb(33,49,48)] order-1"
+            className="text-2xl font-bold text-[rgb(33,49,48)] order-1 flex items-center justify-center"
             aria-label="VivoStat Logo"
           >
-            VivoStat
+            <img src={logo} className="h-10 w-14" alt="VivoStat Logo" />
+            <p>VivoStat </p>
           </Link>
 
           {/* Nav Links (center, lg only) */}
