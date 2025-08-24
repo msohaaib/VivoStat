@@ -2,54 +2,63 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import PrimaryButton from "./PrimaryButton";
+import facebook from "../assets/featureSection/facebook.jpg";
+import Instagram from "../assets/featureSection/Instagram.jpg";
+import linkedin from "../assets/featureSection/linkedin.jpg";
+import tiktok from "../assets/featureSection/Tiktok.jpg";
+import twitter from "../assets/featureSection/twitter.jpg";
+import youtube from "../assets/featureSection/Youtube.jpg";
+import threads from "../assets/featureSection/threads.jpg";
+import pinterest from "../assets/featureSection/pinterest.jpg";
+
 motion;
 
 const ChannelsSection = () => {
   const channels = [
     {
-      imgUrl: "/src/assets/featureSection/facebook.jpg",
+      imgUrl: facebook,
       subheading: "Real-Time Audience Insights",
       heading: "Facebook",
       path: "/channel/facebook",
     },
     {
-      imgUrl: "/src/assets/featureSection/Instagram.jpg",
+      imgUrl: Instagram,
       subheading: "Visual Performance Tracking",
       heading: "Instagram",
       path: "/channel/instagram",
     },
     {
-      imgUrl: "/src/assets/featureSection/linkedin.jpg",
+      imgUrl: linkedin,
       subheading: "Professional Network Analytics",
       heading: "LinkedIn",
       path: "/channel/linkedin",
     },
     {
-      imgUrl: "/src/assets/featureSection/Tiktok.jpg",
+      imgUrl: tiktok,
       subheading: "Trend-Driven Engagement",
       heading: "TikTok",
       path: "/channel/tiktok",
     },
     {
-      imgUrl: "/src/assets/featureSection/twitter.jpg",
+      imgUrl: twitter,
       subheading: "Instant Trend Monitoring",
       heading: "Twitter",
       path: "/channel/twitter",
     },
     {
-      imgUrl: "/src/assets/featureSection/Youtube.jpg",
+      imgUrl: youtube,
       subheading: "Video Performance Metrics",
       heading: "YouTube",
       path: "/channel/youtube",
     },
     {
-      imgUrl: "/src/assets/featureSection/threads.jpg",
+      imgUrl: threads,
       subheading: "Conversation Analytics",
       heading: "Threads",
       path: "/channel/threads",
     },
     {
-      imgUrl: "/src/assets/featureSection/pinterest.jpg",
+      imgUrl: pinterest,
       subheading: "Visual Inspiration Insights",
       heading: "Pinterest",
       path: "/channel/pinterest",
