@@ -60,7 +60,7 @@ const ParallaxEffect = () => {
           Unlock real-time analytics, AI insights, and easy scheduling to boost
           engagement with <span className="font-bold">VivoStat</span>.
         </p>
-        <PrimaryButton href="/signup" aria-label="Get Started Now">
+        <PrimaryButton to="/signup" aria-label="Get Started Now">
           Get Started Now <FiArrowUpRight className="inline align-center" />
         </PrimaryButton>
       </div>

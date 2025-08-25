@@ -59,12 +59,12 @@ const PricingSection = () => {
   ];
 
   return (
-    <section className="bg-[rgb(255,255,250)] py-12 px-4 sm:px-6 lg:px-8">
+    <section className="bg-[rgb(255,255,250)] py-12 px-4 sm:px-6 lg:px-8 container mx-auto">
       <div className="max-w-screen-xl mx-auto">
-        <h2 className="text-3xl font-bold text-[rgb(33,49,48)] mb-8 text-center">
+        <h2 className="text-3xl font-bold text-[rgb(33,49,48)] mb-12 text-center">
           Pricing Plans
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <div
               key={index}
