@@ -85,13 +85,8 @@ const IMG_PADDING = 12;
 
 const TextParallaxContent = ({ imgUrl, subheading, heading, children }) => {
   return (
-    <div
-      style={{
-        paddingLeft: IMG_PADDING,
-        paddingRight: IMG_PADDING,
-      }}
-    >
-      <div className="relative h-[150vh]">
+    <div className="px-3 sm:px-6">
+      <div className="relative h-[120vh] sm:h-[150vh]">
         <StickyImage imgUrl={imgUrl} />
         <OverlayCopy subheading={subheading} heading={heading} />
       </div>
@@ -150,7 +145,7 @@ const OverlayCopy = ({ subheading, heading }) => {
         opacity,
       }}
       ref={targetRef}
-      className="absolute left-0 top-0 flex h-screen w-full flex-col items-center justify-center text-[rgb(255,255,250)]"
+      className="absolute left-0 top-0 flex h-[80vh] sm:h-screen w-full flex-col items-center justify-center text-[rgb(255,255,250)]"
     >
       <p className="mb-2 text-center text-xl md:mb-4 md:text-3xl">
         {subheading}
@@ -161,7 +156,7 @@ const OverlayCopy = ({ subheading, heading }) => {
 };
 
 const ChannelContent = ({ path }) => (
-  <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 pb-24 pt-12 md:grid-cols-12">
+  <div className="mx-auto grid max-w-full md:max-w-5xl grid-cols-1 gap-8 px-4 pb-24 pt-12 md:grid-cols-12">
     <h2 className="col-span-1 text-3xl font-bold text-[rgb(33,49,48)] md:col-span-4">
       About This Channel
     </h2>

@@ -5,10 +5,10 @@ const Footer = () => {
   return (
     <>
       <footer className="bg-[rgb(46,68,67)] text-white mt-12 pt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 container mx-auto text-center py-4 px-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 max-w-[100rem] mx-auto text-center py-4 px-4">
           <div className="w-full">
             <h3 className="text-left pb-4 font-semibold">About Us</h3>
-            <p className="text-left font-extralight text-sm w-md">
+            <p className="text-left font-extralight text-sm">
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quae
               facilis sapiente dolores, id architecto, consequatur veritatis
               quam odio ex similique amet, vel libero.
@@ -49,15 +49,15 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="flex justify-between container mx-auto py-4">
+        <div className="flex flex-col md:flex-row md:justify-between items-center max-w-[100rem] mx-auto py-4 px-4 gap-2">
           <Link
             to="/"
             className="text-3xl font-bold text-[rgb(250,250,255)]"
             aria-label="VivoStat Logo"
           >
-            <p>VivoStat </p>
+            <p>VivoStat</p>
           </Link>
-          <div className="flex space-x-4">
+          <div className="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 items-center">
             <Link
               to="/terms"
               className="text-[rgb(250,250,255)] hover:underline font-extralight text-sm"
