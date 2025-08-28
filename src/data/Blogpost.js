@@ -11,6 +11,7 @@ const blogPosts = [
     description:
       "Learn the latest tips and tricks to stay ahead in React development this year with modern tools and libraries.",
     date: "Aug 15, 2025",
+    category: "React",
     image: facebook,
   },
   {
@@ -19,6 +20,7 @@ const blogPosts = [
     description:
       "Discover why developers are shifting to Tailwind for building sleek, responsive, and maintainable UIs faster.",
     date: "Jul 22, 2025",
+    category: "CSS",
     image: Instagram,
   },
   {
@@ -27,6 +29,7 @@ const blogPosts = [
     description:
       "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
     date: "Jun 30, 2025",
+    category: "AI",
     image: Twitter,
   },
   {
@@ -35,6 +38,7 @@ const blogPosts = [
     description:
       "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
     date: "Jun 30, 2025",
+    category: "AI",
     image: Linkedin,
   },
   {
@@ -43,7 +47,35 @@ const blogPosts = [
     description:
       "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
     date: "Jun 30, 2025",
+    category: "AI",
+    image: Instagram,
+  },
+  {
+    id: 6,
+    title: "AI in React Development",
+    description:
+      "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
+    date: "Jun 30, 2025",
+    category: "React",
     image: Tiktok,
+  },
+  {
+    id: 7,
+    title: "CSS in React Development",
+    description:
+      "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
+    date: "Jun 30, 2025",
+    category: "React",
+    image: facebook,
+  },
+  {
+    id: 8,
+    title: "CSS in React Development",
+    description:
+      "CSS is a crucial part of web development. Learn how to effectively use CSS in your React projects. For more information, check out our detailed guide.",
+    date: "Jun 30, 2025",
+    category: "CSS",
+    image: Twitter,
   },
 ];
 
