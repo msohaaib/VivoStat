@@ -14,8 +14,8 @@ const Pricing = () => {
         "Basic Analytics": true,
         "Advanced Analytics": false,
         "Custom Report Generator": false,
-        "Unlimited Custom Reports": false,
-        "Engagement with Social Media": true,
+        "Unlimited Custom Reports": true,
+        "Engagement with Social Media": false,
         "Social Media Scheduler": false,
         "Advanced Engagement Tools": false,
         "Limited User Dashboard Customization": true,
@@ -34,7 +34,7 @@ const Pricing = () => {
         "Basic Analytics": false,
         "Advanced Analytics": true,
         "Custom Report Generator": true,
-        "Unlimited Custom Reports": false,
+        "Unlimited Custom Reports": true,
         "Engagement with Social Media": true,
         "Social Media Scheduler": true,
         "Advanced Engagement Tools": false,
@@ -109,6 +109,11 @@ const Pricing = () => {
 
   return (
     <>
+      <div className="bg-[rgb(33,49,48)] py-12 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-bold text-center text-[rgb(250,250,255)] mb-8">
+          Pick a plan that Suits your Needs
+        </h1>
+      </div>
       <Suspense fallback={<div>Loading...</div>}>
         <PricingSection />
       </Suspense>
@@ -117,52 +122,100 @@ const Pricing = () => {
           <h2 className="text-3xl font-bold text-[rgb(33,49,48)] mb-6 text-center">
             Pricing Plans Comparison
           </h2>
+
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full border border-gray-300">
               <thead>
-                <tr className="bg-[rgb(33,49,48)]/10">
-                  <th className="p-4 font-semibold text-[rgb(33,49,48)]">
-                    Features
-                  </th>
-                  <th
-                    className="p-4 font-semibold text-[rgb(33,49,48)]"
-                    scope="col"
-                  >
-                    Starter
-                  </th>
-                  <th
-                    className="p-4 font-semibold text-[rgb(33,49,48)] relative"
-                    scope="col"
-                  >
-                    Pro
-                  </th>
-                  <th
-                    className="p-4 font-semibold text-[rgb(33,49,48)]"
-                    scope="col"
-                  >
-                    Enterprise
-                  </th>
+                <tr className="bg-[rgb(33,49,48)]/90 text-white">
+                  <th className="p-4 text-left font-semibold">Features</th>
+                  {plans.map((plan) => (
+                    <th
+                      key={plan.name}
+                      scope="col"
+                      className="p-4 font-semibold text-center"
+                    >
+                      {plan.name}
+                      <p></p>
+                      {plan.name === "Pro" && (
+                        <span className="mt-3 text-md bg-red-500 text-white px-3 py-1 rounded-full font-medium">
+                          Recommended
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+                <tr className="bg-[rgb(33,49,48)]/90">
+                  <th></th>
+                  {plans.map((plan) => (
+                    <th key={plan.name} className="text-center p-3">
+                      <PrimaryButton to="/signup" aria-label="Sign Up Now">
+                        Start 14-Day Free Trial{" "}
+                        <FiArrowUpRight className="inline align-center" />
+                      </PrimaryButton>
+                    </th>
+                  ))}
                 </tr>
               </thead>
+
               <tbody>
-                {Object.keys(plans[0].features).map((category) => (
+                {Object.keys(plans[0].features).map((category, idx) => (
                   <tr
                     key={category}
-                    className="border-t border-[rgb(33,49,48)]/10"
+                    className={`${
+                      idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    } border-b border-gray-200`}
                   >
+                    {/* Feature name */}
                     <td className="p-4 font-medium text-[rgb(33,49,48)]">
                       {category}
                     </td>
+
+                    {/* Plan availability */}
                     {plans.map((plan) => (
                       <td
                         key={`${plan.name}-${category}`}
-                        className="p-4 text-[rgb(33,49,48)]"
+                        className="p-4 text-center"
                       >
-                        {typeof plan.features[category] === "boolean"
-                          ? plan.features[category]
-                            ? "✓"
-                            : "-"
-                          : plan.features[category]}
+                        {typeof plan.features[category] === "boolean" ? (
+                          plan.features[category] ? (
+                            <svg
+                              className="w-5 h-5 text-green-600 inline-block"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 
+                          0l-4-4a1 1 0 011.414-1.414L8 
+                          12.586l7.293-7.293a1 1 0 
+                          011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-5 h-5 text-red-500 inline-block"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 8.586l4.95-4.95a1 1 
+                          0 111.414 1.414L11.414 
+                          10l4.95 4.95a1 1 0 
+                          01-1.414 1.414L10 11.414l-4.95 
+                          4.95a1 1 0 01-1.414-1.414L8.586 
+                          10 3.636 5.05A1 1 0 
+                          115.05 3.636L10 8.586z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          )
+                        ) : (
+                          plan.features[category]
+                        )}
                       </td>
                     ))}
                   </tr>
@@ -170,6 +223,7 @@ const Pricing = () => {
               </tbody>
             </table>
           </div>
+
           <p className="text-center text-[rgb(33,49,48)]/70 mt-6">
             Need more than 8 channels? The Enterprise plan is for you!
           </p>
