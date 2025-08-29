@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import socailGrowth from "../assets/CTA/CTABG.png";
+import socailGrowth from "../assets/featureSection/social-media.jpg";
 import PrimaryButton from "../Component/PrimaryButton";
 import { FiArrowUpRight } from "react-icons/fi";
 const PricingSection = lazy(() => import("../Component/PricingSection"));

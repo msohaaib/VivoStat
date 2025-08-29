@@ -6,10 +6,15 @@ import socail from "../assets/featureSection/social-media.jpg";
 import PricingSection from "../Component/PricingSection";
 import PrimaryButton from "../Component/PrimaryButton";
 import { FiArrowUpRight } from "react-icons/fi";
-import latestPost from "../data/latestPost";
-import socailGrowth from "../assets/CTA/CTABG.png";
+import blogPosts from "../data/Blogpost";
+import BlogPostCard from "../Component/BlogPostCard";
+import socialGrowth from "../assets/featureSection/social-media.jpg";
 
 const Home = () => {
+  const latestPosts = [...blogPosts]
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(-4);
+
   return (
     <div>
       <Hero />
@@ -47,7 +52,7 @@ const Home = () => {
       {/* Call to Action Section */}
       <section
         style={{
-          backgroundImage: `url(${socailGrowth})`,
+          backgroundImage: `url(${socialGrowth})`,
         }}
         className={
           "py-12 px-4 sm:px-6 lg:px-8 my-12 bg-cover bg-center bg-fixed"
@@ -72,26 +77,7 @@ const Home = () => {
         <h2 className="text-3xl font-bold text-[rgb(33,49,48)] mb-12 text-center">
           Latest Posts
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {latestPost.map((post) => (
-            <div
-              key={post.id}
-              className="border border-[rgb(33,49,48)]/10 px-4 py-6 rounded-lg hover:border-[rgb(33,49,48)] transition-all duration-500"
-            >
-              <img
-                src={post.img}
-                className="w-full h-48 object-cover rounded-md mb-4"
-                alt="Post Image"
-              />
-              <Link to={`/blog/${post.id}`}>
-                <h3 className="text-xl font-semibold text-[rgb(33,49,48)] mb-4 hover:underline">
-                  {post.title}
-                </h3>
-              </Link>
-              <p className="text-sm text-[rgb(87,90,90)]">{post.content}</p>
-            </div>
-          ))}
-        </div>
+        <BlogPostCard posts={latestPosts} />
       </section>
     </div>
   );

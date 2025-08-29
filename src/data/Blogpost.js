@@ -37,7 +37,7 @@ const blogPosts = [
     title: "AI in Web Development",
     description:
       "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
-    date: "Jun 30, 2025",
+    date: "Aug 29, 2025",
     category: "AI",
     image: Linkedin,
   },
@@ -46,7 +46,7 @@ const blogPosts = [
     title: "AI in Web Development",
     description:
       "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
-    date: "Jun 30, 2025",
+    date: "Jun 25, 2025",
     category: "AI",
     image: Instagram,
   },
@@ -55,7 +55,7 @@ const blogPosts = [
     title: "AI in React Development",
     description:
       "Artificial Intelligence is shaping the future of web apps. Here’s how you can integrate AI features in your projects.",
-    date: "Jun 30, 2025",
+    date: "Jul 30, 2025",
     category: "React",
     image: Tiktok,
   },
@@ -73,7 +73,7 @@ const blogPosts = [
     title: "CSS in React Development",
     description:
       "CSS is a crucial part of web development. Learn how to effectively use CSS in your React projects. For more information, check out our detailed guide.",
-    date: "Jun 30, 2025",
+    date: "Aug 13, 2025",
     category: "CSS",
     image: Twitter,
   },
