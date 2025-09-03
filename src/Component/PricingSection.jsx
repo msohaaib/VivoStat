@@ -110,7 +110,7 @@ const PricingSection = () => {
               <h3 className="text-xl font-semibold my-6 text-[rgb(33,49,48)]">
                 {plan.name}
               </h3>
-              <motion.p
+              <motion.div
                 className="my-6"
                 key={`${plan.name}-${isAnnual}`} // Ensure animation triggers on change
                 initial={{ opacity: 0, y: 10 }}
@@ -134,7 +134,7 @@ const PricingSection = () => {
                     Billed monthly
                   </span>
                 )}
-              </motion.p>
+              </motion.div>
               <PrimaryButton
                 to={plan.to}
                 ariaLabel={`Sign up for ${plan.name}`}
