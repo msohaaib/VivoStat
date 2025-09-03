@@ -62,11 +62,11 @@ const Navbar = () => {
               ))}
 
               {/* Mobile Auth Buttons */}
-              <div className="lg:hidden flex flex-col space-y-3 items-center justify-center w-full">
+              <div className="lg:hidden flex flex-col space-y-3 items-center justify-center">
                 <SecondaryButton
                   onClick={closeMenu}
                   to="/login"
-                  className="w-full rounded-xl font-semibold block"
+                  className="mx-8 rounded-xl font-semibold block min-w-[25rem]"
                   aria-label="Login"
                 >
                   Login
@@ -74,7 +74,7 @@ const Navbar = () => {
                 <PrimaryButton
                   to={"/signup"}
                   ariaLabel={`Sign up for ${"VivoStat"}`}
-                  className="w-full my-6 rounded-xl block"
+                  className="my-6 rounded-xl block min-w-[25rem] mx-8"
                 >
                   Get Started Now
                 </PrimaryButton>
