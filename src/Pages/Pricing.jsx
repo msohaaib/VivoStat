@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import socailGrowth from "../assets/featureSection/social-media.jpg";
+import socailGrowth from "../assets/featureSection/social-media.png";
 import PrimaryButton from "../Component/PrimaryButton";
 import { FiArrowUpRight } from "react-icons/fi";
 const PricingSection = lazy(() => import("../Component/PricingSection"));
@@ -109,10 +109,14 @@ const Pricing = () => {
 
   return (
     <>
-      <div className="bg-[rgb(33,49,48)] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[rgb(33,49,48)] py-16 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-center text-[rgb(250,250,255)] mb-8">
           Pick a plan that Suits your Needs
         </h1>
+        <p className="text-lg text-center text-[rgb(244,242,242)] max-w-2xl mx-auto">
+          Choose from flexible plans designed to fit individuals, teams, and
+          businesses.
+        </p>
       </div>
       <Suspense fallback={<div>Loading...</div>}>
         <PricingSection />

@@ -1,10 +1,3 @@
-import Analysis from "../assets/NavbarIcons/Analysis.png";
-import Report from "../assets/NavbarIcons/report.png";
-import Scedular from "../assets/NavbarIcons/socialMediaSchedular.png";
-import MultiChannelComparison from "../assets/NavbarIcons/multiChannelComparison.png";
-import CustomizeDashboard from "../assets/NavbarIcons/CustomizeDashboard.png";
-import AIPoweredSuggestion from "../assets/NavbarIcons/AIPoweredSuggestions.png";
-
 const NavLink = [
   {
     id: 1,

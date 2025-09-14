@@ -8,7 +8,7 @@ import PrimaryButton from "../Component/PrimaryButton";
 import { FiArrowUpRight } from "react-icons/fi";
 import blogPosts from "../data/Blogpost";
 import BlogPostCard from "../Component/BlogPostCard";
-import socialGrowth from "../assets/featureSection/social-media.jpg";
+import socialGrowth from "../assets/featureSection/social-media.png";
 
 const Home = () => {
   const latestPosts = [...blogPosts]
