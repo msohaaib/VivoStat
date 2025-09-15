@@ -1,17 +1,48 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link, Navigate } from "react-router-dom";
-motion;
+import { Link, useNavigate } from "react-router-dom";
+import { account } from "../appwrite/appwrit_config";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
+  const [status, setStatus] = useState(""); // For success/error messages
+  const navigate = useNavigate(); // For redirection after login
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1000);
+    setStatus(""); // Clear previous status
+
+    // Validate form
+    if (!form.email || !form.password) {
+      setStatus("Email and password are required");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Check if a session is active and log out if necessary
+      try {
+        await account.get(); // Check if session exists
+        await account.deleteSession("current"); // Log out current session
+      } catch (sessionError) {
+        // No active session, proceed normally
+      }
+
+      // Log in with Appwrite
+      await account.createEmailPasswordSession(form.email, form.password);
+      setStatus("Logged in successfully!");
+      // Redirect to dashboard after a short delay to show success message
+      setTimeout(() => navigate("/dashboard"), 1000); // Adjust route as needed
+    } catch (error) {
+      setStatus("Error: " + error.message);
+      console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const containerVariants = {
@@ -110,6 +141,7 @@ const Login = () => {
               <button
                 type="button"
                 className="text-blue-400 hover:text-blue-300"
+                onClick={() => alert("Forgot password feature coming soon!")}
               >
                 Forgot password?
               </button>
@@ -124,6 +156,15 @@ const Login = () => {
               {isLoading ? "Signing In..." : "Sign In →"}
             </button>
           </motion.form>
+          {status && (
+            <p
+              className={`mt-4 text-center ${
+                status.includes("Error") ? "text-red-400" : "text-green-400"
+              }`}
+            >
+              {status}
+            </p>
+          )}
           <p className="text-slate-400 text-sm text-center mt-4">
             Don’t have an account?{" "}
             <Link to="/signup" className="text-blue-400 hover:underline">

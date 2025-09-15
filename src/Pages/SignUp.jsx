@@ -1,7 +1,9 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-motion;
+import { Link, useNavigate } from "react-router-dom";
+import { account, ID } from "../appwrite/appwrit_config"; // Import ID for unique()
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,11 +15,59 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+  const [status, setStatus] = useState("");
+  const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 2000);
+    setStatus("");
+
+    if (form.password !== form.confirmPassword) {
+      setStatus("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+    if (!form.email || !form.password) {
+      setStatus("Email and password are required");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Step 1: Create user
+      console.log("Creating user with email:", form.email);
+      const user = await account.create(
+        ID.unique(),
+        form.email,
+        form.password,
+        form.name
+      );
+      console.log("User created:", user);
+      setStatus("Account created! Logging in to send verification...");
+
+      // Step 2: Create session with new credentials
+      console.log("Creating session with email:", form.email);
+      await account.createEmailPasswordSession(form.email, form.password);
+      console.log("Session created successfully");
+      setStatus("Session created! Sending verification email...");
+
+      // Step 3: Send verification email
+      console.log("Sending verification email to:", form.email);
+      await account.createVerification(
+        process.env.REACT_APP_APP_URL + "/verify"
+      ); // Update for production
+      console.log("Verification email sent");
+      setStatus("Verification email sent! Check your inbox (and spam).");
+
+      // Redirect to verify page
+      setTimeout(() => navigate("/verify"), 1500);
+    } catch (error) {
+      console.error("Signup error details:", error);
+      setStatus("Error: " + (error.message || "Unknown error occurred"));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const containerVariants = {
@@ -40,7 +90,6 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[rgb(33,49,48)] via-[rgb(33,49,76)] to-[rgb(33,49,48)] flex items-center justify-center p-4 relative">
-      {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[rgb(33,49,76)] rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[rgb(33,49,76)] rounded-full blur-3xl"></div>
@@ -52,7 +101,6 @@ const Signup = () => {
         animate="visible"
         className="relative z-10 w-full max-w-md"
       >
-        {/* Card */}
         <div className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-6">
           <div className="text-center pb-2">
             <motion.div
@@ -67,7 +115,6 @@ const Signup = () => {
             <p className="text-slate-300">Join us today</p>
           </div>
 
-          {/* Signup Form */}
           <motion.form
             variants={formVariants}
             initial="hidden"
@@ -75,7 +122,6 @@ const Signup = () => {
             onSubmit={handleSignup}
             className="space-y-4"
           >
-            {/* Full Name */}
             <div className="space-y-2">
               <label className="text-slate-200 block">Full Name</label>
               <input
@@ -89,7 +135,6 @@ const Signup = () => {
               />
             </div>
 
-            {/* Email */}
             <div className="space-y-2">
               <label className="text-slate-200 block">Email</label>
               <input
@@ -103,7 +148,6 @@ const Signup = () => {
               />
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <label className="text-slate-200 block">Password</label>
               <div className="relative">
@@ -126,7 +170,6 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Confirm Password */}
             <div className="space-y-2">
               <label className="text-slate-200 block">Confirm Password</label>
               <div className="relative">
@@ -152,15 +195,23 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Button */}
             <button
               type="submit"
               disabled={isLoading}
               className="w-full bg-gradient-to-r from-[rgb(33,49,48)] to-[rgb(33,49,76)] hover:from-[rgb(33,49,76)] hover:to-[rgb(33,49,48)] text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
             >
-              {isLoading ? "Creating Account..." : "Create Account ✓"}
+              {isLoading ? "Creating Account..." : "Create Account"}
             </button>
           </motion.form>
+          {status && (
+            <p
+              className={`mt-4 text-center ${
+                status.includes("Error") ? "text-red-400" : "text-green-400"
+              }`}
+            >
+              {status}
+            </p>
+          )}
           <p className="text-slate-400 text-sm text-center mt-4">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-400 hover:underline">
