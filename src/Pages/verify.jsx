@@ -39,12 +39,6 @@ const Verify = () => {
       <div className="text-center text-white">
         <h2 className="text-2xl font-bold mb-4">Email Verification</h2>
         <p>{status}</p>
-        <button
-          onClick={() => navigate("/login")}
-          className="mt-4 px-4 py-2 bg-blue-600 rounded text-white"
-        >
-          Go to Login
-        </button>
       </div>
     </div>
   );

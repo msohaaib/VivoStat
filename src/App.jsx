@@ -20,7 +20,7 @@ function AppLayout() {
   const location = useLocation();
 
   // List of routes where Navbar & Footer should be hidden
-  const hiddenLayoutRoutes = ["/login", "/signup", "/dashboard"];
+  const hiddenLayoutRoutes = ["/login", "/signup", "/dashboard", "/verify"];
 
   // Check if current path matches one of the hidden routes
   const hideLayout = hiddenLayoutRoutes.includes(location.pathname);
