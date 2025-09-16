@@ -3,14 +3,22 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { account } from "../appwrite/appwrit_config";
+import { sendOTP, verifyOTP } from "../appwrite/auth";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [status, setStatus] = useState("");
+  const [isOtpMode, setIsOtpMode] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpUserId, setOtpUserId] = useState("");
   const navigate = useNavigate();
 
+  // Check if device is trusted
+  const isTrustedDevice = localStorage.getItem("trustedDevice") === "true";
+
+  // Password login handler
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -22,23 +30,26 @@ const Login = () => {
       return;
     }
 
+    // If device is not trusted, force OTP
+    if (!isTrustedDevice) {
+      setStatus("New device detected. Please login via OTP.");
+      setIsOtpMode(true);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       // End any existing session
       try {
         await account.get();
         await account.deleteSession("current");
-      } catch (_) {
-        // no active session, safe to ignore
-      }
+      } catch (_) {}
 
-      // Try login
+      // Login with email & password
       await account.createEmailPasswordSession(form.email, form.password);
 
-      // Get user info
       const user = await account.get();
-
       if (!user.emailVerification) {
-        // Force logout if not verified
         await account.deleteSession("current");
         setStatus("Please verify your email before logging in.");
         setIsLoading(false);
@@ -55,6 +66,44 @@ const Login = () => {
     }
   };
 
+  // OTP login handler
+  const handleSendOTP = async () => {
+    if (!form.email) {
+      setStatus("Please enter your email first");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const res = await sendOTP(form.email);
+      setOtpUserId(res.userId);
+      setIsOtpMode(true);
+      setStatus("OTP sent! Check your email.");
+    } catch (error) {
+      setStatus("Error sending OTP: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    if (!otp) {
+      setStatus("Please enter OTP");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await verifyOTP(otpUserId, otp);
+      localStorage.setItem("trustedDevice", "true"); // mark device trusted
+      setStatus("OTP verified! Logging in...");
+      setTimeout(() => navigate("/dashboard"), 1000);
+    } catch (error) {
+      setStatus("Error verifying OTP: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Framer Motion variants
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -75,7 +124,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[rgb(33,49,48)] via-[rgb(33,49,76)] to-[rgb(33,49,48)] flex items-center justify-center p-4 relative">
-      {/* Background decoration */}
+      {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[rgb(33,49,48)] rounded-full blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[rgb(33,49,48)] rounded-full blur-3xl"></div>
@@ -105,7 +154,7 @@ const Login = () => {
             variants={formVariants}
             initial="hidden"
             animate="visible"
-            onSubmit={handleLogin}
+            onSubmit={!isOtpMode ? handleLogin : (e) => e.preventDefault()}
             className="space-y-4"
           >
             {/* Email */}
@@ -122,46 +171,91 @@ const Login = () => {
               />
             </div>
 
-            {/* Password */}
-            <div className="space-y-2">
-              <label className="text-slate-200 block">Password</label>
-              <div className="relative">
+            {/* Password (hide if OTP mode) */}
+            {!isOtpMode && (
+              <div className="space-y-2">
+                <label className="text-slate-200 block">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, password: e.target.value }))
+                    }
+                    className="w-full px-3 py-2 pr-10 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                  >
+                    {showPassword ? "🙈" : "👁️"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* OTP input */}
+            {isOtpMode && (
+              <div className="space-y-2">
+                <label className="text-slate-200 block">OTP</label>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={form.password}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, password: e.target.value }))
-                  }
-                  className="w-full px-3 py-2 pr-10 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400"
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400"
                 />
+              </div>
+            )}
+
+            {/* Forgot password */}
+            {!isOtpMode && (
+              <div className="flex justify-end text-sm">
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                  className="text-blue-400 hover:text-blue-300"
+                  onClick={() => alert("Forgot password feature coming soon!")}
                 >
-                  {showPassword ? "🙈" : "👁️"}
+                  Forgot password?
                 </button>
               </div>
-            </div>
+            )}
 
-            <div className="flex justify-end text-sm">
+            {/* Login button */}
+            {!isOtpMode && (
               <button
-                type="button"
-                className="text-blue-400 hover:text-blue-300"
-                onClick={() => alert("Forgot password feature coming soon!")}
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-[rgb(33,49,48)] to-[rgb(33,49,76)] hover:from-[rgb(33,49,76)] hover:to-[rgb(33,49,48)] text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
               >
-                Forgot password?
+                {isLoading ? "Signing In..." : "Sign In →"}
               </button>
-            </div>
+            )}
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-[rgb(33,49,48)] to-[rgb(33,49,76)] hover:from-[rgb(33,49,76)] hover:to-[rgb(33,49,48)] text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-            >
-              {isLoading ? "Signing In..." : "Sign In →"}
-            </button>
+            {/* OTP buttons */}
+            <div className="flex flex-col space-y-2">
+              {!isOtpMode ? (
+                <button
+                  type="button"
+                  onClick={handleSendOTP}
+                  disabled={isLoading}
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02]"
+                >
+                  {isLoading ? "Sending OTP..." : "Login via OTP"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleVerifyOTP}
+                  disabled={isLoading}
+                  className="w-full bg-green-600 hover:bg-green-500 text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02]"
+                >
+                  {isLoading ? "Verifying OTP..." : "Verify OTP"}
+                </button>
+              )}
+            </div>
           </motion.form>
 
           {status && (
