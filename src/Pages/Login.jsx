@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { account } from "../appwrite/appwrit_config";
-import { sendOTP, verifyOTP } from "../appwrite/auth";
+import { sendOTP, verifyOTP } from "../auth";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,10 +13,13 @@ const Login = () => {
   const [isOtpMode, setIsOtpMode] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpUserId, setOtpUserId] = useState("");
+  const [isTrustedDevice, setIsTrustedDevice] = useState(false);
   const navigate = useNavigate();
 
-  // Check if device is trusted
-  const isTrustedDevice = localStorage.getItem("trustedDevice") === "true";
+  // Check local storage for trusted device
+  useEffect(() => {
+    setIsTrustedDevice(localStorage.getItem("trustedDevice") === "true");
+  }, []);
 
   // Password login handler
   const handleLogin = async (e) => {
@@ -30,16 +33,8 @@ const Login = () => {
       return;
     }
 
-    // If device is not trusted, force OTP
-    if (!isTrustedDevice) {
-      setStatus("New device detected. Please login via OTP.");
-      setIsOtpMode(true);
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      // End any existing session
+      // End existing session if any
       try {
         await account.get();
         await account.deleteSession("current");
@@ -57,6 +52,7 @@ const Login = () => {
       }
 
       setStatus("Logged in successfully!");
+      localStorage.setItem("trustedDevice", "true"); // mark device trusted
       setTimeout(() => navigate("/dashboard"), 1000);
     } catch (error) {
       setStatus("Error: " + error.message);
@@ -66,7 +62,7 @@ const Login = () => {
     }
   };
 
-  // OTP login handler
+  // OTP handlers
   const handleSendOTP = async () => {
     if (!form.email) {
       setStatus("Please enter your email first");
@@ -154,7 +150,7 @@ const Login = () => {
             variants={formVariants}
             initial="hidden"
             animate="visible"
-            onSubmit={!isOtpMode ? handleLogin : (e) => e.preventDefault()}
+            onSubmit={isTrustedDevice ? handleLogin : (e) => e.preventDefault()}
             className="space-y-4"
           >
             {/* Email */}
@@ -171,8 +167,8 @@ const Login = () => {
               />
             </div>
 
-            {/* Password (hide if OTP mode) */}
-            {!isOtpMode && (
+            {/* Password (hide in OTP mode) */}
+            {isTrustedDevice && !isOtpMode && (
               <div className="space-y-2">
                 <label className="text-slate-200 block">Password</label>
                 <div className="relative">
@@ -211,7 +207,7 @@ const Login = () => {
             )}
 
             {/* Forgot password */}
-            {!isOtpMode && (
+            {isTrustedDevice && !isOtpMode && (
               <div className="flex justify-end text-sm">
                 <button
                   type="button"
@@ -223,8 +219,8 @@ const Login = () => {
               </div>
             )}
 
-            {/* Login button */}
-            {!isOtpMode && (
+            {/* Action button: only one at a time */}
+            {!isOtpMode && isTrustedDevice && (
               <button
                 type="submit"
                 disabled={isLoading}
@@ -234,28 +230,27 @@ const Login = () => {
               </button>
             )}
 
-            {/* OTP buttons */}
-            <div className="flex flex-col space-y-2">
-              {!isOtpMode ? (
-                <button
-                  type="button"
-                  onClick={handleSendOTP}
-                  disabled={isLoading}
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02]"
-                >
-                  {isLoading ? "Sending OTP..." : "Login via OTP"}
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleVerifyOTP}
-                  disabled={isLoading}
-                  className="w-full bg-green-600 hover:bg-green-500 text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02]"
-                >
-                  {isLoading ? "Verifying OTP..." : "Verify OTP"}
-                </button>
-              )}
-            </div>
+            {!isOtpMode && !isTrustedDevice && (
+              <button
+                type="button"
+                onClick={handleSendOTP}
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-[rgb(33,49,48)] to-[rgb(33,49,76)] hover:from-[rgb(33,49,76)] hover:to-[rgb(33,49,48)] text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+              >
+                {isLoading ? "Sending OTP..." : "Login via OTP"}
+              </button>
+            )}
+
+            {isOtpMode && (
+              <button
+                type="button"
+                onClick={handleVerifyOTP}
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-[rgb(33,49,48)] to-[rgb(33,49,76)] hover:from-[rgb(33,49,76)] hover:to-[rgb(33,49,48)] text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+              >
+                {isLoading ? "Verifying OTP..." : "Verify OTP"}
+              </button>
+            )}
           </motion.form>
 
           {status && (
