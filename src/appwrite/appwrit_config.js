@@ -3,12 +3,11 @@ import { Client, Account, ID } from "appwrite";
 
 const client = new Client()
   .setEndpoint(
-    process.env.REACT_APP_APPWRITE_ENDPOINT ||
-      "https://fra.cloud.appwrite.io/v1"
-  ) // Your Appwrite endpoint
+    import.meta.env.VITE_APPWRITE_ENDPOINT || "https://fra.cloud.appwrite.io/v1"
+  )
   .setProject(
-    process.env.REACT_APP_APPWRITE_PROJECT_ID || "68c89239001252c2e9e2"
-  ); // Your Project ID from the dashboard URL
+    import.meta.env.VITE_APPWRITE_PROJECT_ID || "68c89239001252c2e9e2"
+  );
 
 const account = new Account(client);
 
