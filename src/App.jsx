@@ -15,12 +15,19 @@ import Features from "./Pages/Features";
 import Pricing from "./Pages/Pricing";
 import Dashboard from "./Pages/Dashboard";
 import Verify from "./Pages/verify";
+import VerifyOTP from "./Pages/VerifyOTP";
 
 function AppLayout() {
   const location = useLocation();
 
   // List of routes where Navbar & Footer should be hidden
-  const hiddenLayoutRoutes = ["/login", "/signup", "/dashboard", "/verify"];
+  const hiddenLayoutRoutes = [
+    "/login",
+    "/signup",
+    "/dashboard",
+    "/verify",
+    "/VerifyOTP",
+  ];
 
   // Check if current path matches one of the hidden routes
   const hideLayout = hiddenLayoutRoutes.includes(location.pathname);
@@ -38,6 +45,7 @@ function AppLayout() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/VerifyOTP" element={<VerifyOTP />} />
       </Routes>
       {!hideLayout && <Footer />}
     </div>
