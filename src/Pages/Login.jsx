@@ -8,15 +8,14 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
-  const [status, setStatus] = useState(""); // For success/error messages
-  const navigate = useNavigate(); // For redirection after login
+  const [status, setStatus] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setStatus(""); // Clear previous status
+    setStatus("");
 
-    // Validate form
     if (!form.email || !form.password) {
       setStatus("Email and password are required");
       setIsLoading(false);
@@ -24,19 +23,30 @@ const Login = () => {
     }
 
     try {
-      // Check if a session is active and log out if necessary
+      // End any existing session
       try {
-        await account.get(); // Check if session exists
-        await account.deleteSession("current"); // Log out current session
-      } catch (sessionError) {
-        // No active session, proceed normally
+        await account.get();
+        await account.deleteSession("current");
+      } catch (_) {
+        // no active session, safe to ignore
       }
 
-      // Log in with Appwrite
+      // Try login
       await account.createEmailPasswordSession(form.email, form.password);
+
+      // Get user info
+      const user = await account.get();
+
+      if (!user.emailVerification) {
+        // Force logout if not verified
+        await account.deleteSession("current");
+        setStatus("Please verify your email before logging in.");
+        setIsLoading(false);
+        return;
+      }
+
       setStatus("Logged in successfully!");
-      // Redirect to dashboard after a short delay to show success message
-      setTimeout(() => navigate("/dashboard"), 1000); // Adjust route as needed
+      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (error) {
       setStatus("Error: " + error.message);
       console.error("Login failed:", error);
@@ -77,7 +87,6 @@ const Login = () => {
         animate="visible"
         className="relative z-10 w-full max-w-md"
       >
-        {/* Card */}
         <div className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-2xl p-6">
           <div className="text-center pb-2">
             <motion.div
@@ -92,7 +101,6 @@ const Login = () => {
             <p className="text-slate-300">Access your account</p>
           </div>
 
-          {/* Login Form */}
           <motion.form
             variants={formVariants}
             initial="hidden"
@@ -147,7 +155,6 @@ const Login = () => {
               </button>
             </div>
 
-            {/* Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -156,15 +163,19 @@ const Login = () => {
               {isLoading ? "Signing In..." : "Sign In →"}
             </button>
           </motion.form>
+
           {status && (
             <p
               className={`mt-4 text-center ${
-                status.includes("Error") ? "text-red-400" : "text-green-400"
+                status.includes("Error") || status.includes("verify")
+                  ? "text-red-400"
+                  : "text-green-400"
               }`}
             >
               {status}
             </p>
           )}
+
           <p className="text-slate-400 text-sm text-center mt-4">
             Don’t have an account?{" "}
             <Link to="/signup" className="text-blue-400 hover:underline">
