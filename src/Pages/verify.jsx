@@ -9,24 +9,29 @@ const Verify = () => {
 
   useEffect(() => {
     const userId = searchParams.get("userId");
-    const secret = searchParams.get("secret");
+    const secret = decodeURIComponent(searchParams.get("secret") || "");
 
-    if (userId && secret) {
-      const verifyEmail = async () => {
-        try {
-          await account.updateVerification(userId, secret);
-          setStatus("Email verified successfully! Redirecting to login...");
-          setTimeout(() => navigate("/login"), 2000);
-        } catch (error) {
-          setStatus("Verification failed: " + error.message);
-        }
-      };
-      verifyEmail().catch((error) => {
-        setStatus("Verification failed: " + error.message);
-      });
-    } else {
-      setStatus("Invalid verification link. Please try again.");
+    if (!userId || !secret) {
+      setStatus(
+        "Check your email and click the verification link to verify your account."
+      );
+      return;
     }
+
+    const verifyEmail = async () => {
+      try {
+        await account.updateVerification(userId, secret);
+        setStatus("Email verified successfully! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 2000);
+      } catch (error) {
+        setStatus(
+          "Verification failed: " +
+            (error?.message || "Invalid or expired verification link.")
+        );
+      }
+    };
+
+    verifyEmail();
   }, [searchParams, navigate]);
 
   return (
