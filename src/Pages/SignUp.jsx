@@ -55,7 +55,7 @@ const Signup = () => {
       // Step 3: Send verification email
       console.log("Sending verification email to:", form.email);
       await account.createVerification(
-        process.env.REACT_APP_APP_URL + "/verify"
+        import.meta.env.VITE_APP_URL + "/verify"
       ); // Update for production
       console.log("Verification email sent");
       setStatus("Verification email sent! Check your inbox (and spam).");
