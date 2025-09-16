@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { Client, Account, ID } from "appwrite";
 
 const client = new Client()

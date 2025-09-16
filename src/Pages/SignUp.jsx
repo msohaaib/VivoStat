@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -23,6 +22,7 @@ const Signup = () => {
     setIsLoading(true);
     setStatus("");
 
+    // Validation checks
     if (form.password !== form.confirmPassword) {
       setStatus("Passwords do not match");
       setIsLoading(false);
@@ -30,6 +30,17 @@ const Signup = () => {
     }
     if (!form.email || !form.password) {
       setStatus("Email and password are required");
+      setIsLoading(false);
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setStatus("Error: Please enter a valid email address");
+      setIsLoading(false);
+      return;
+    }
+    if (form.password.length < 8) {
+      setStatus("Password must be at least 8 characters");
       setIsLoading(false);
       return;
     }
@@ -48,23 +59,37 @@ const Signup = () => {
 
       // Step 2: Create session with new credentials
       console.log("Creating session with email:", form.email);
-      await account.createEmailPasswordSession(form.email, form.password);
+      const session = await account.createEmailPasswordSession(
+        form.email,
+        form.password
+      );
       console.log("Session created successfully");
       setStatus("Session created! Sending verification email...");
 
       // Step 3: Send verification email
-      console.log("Sending verification email to:", form.email);
-      await account.createVerification(
-        import.meta.env.VITE_APP_URL + "/verify"
-      ); // Update for production
-      console.log("Verification email sent");
+      const verifyUrl = import.meta.env.VITE_APP_URL + "/verify";
+      console.log("Sending verification to URL:", verifyUrl);
+      const verificationResponse = await account.createVerification(verifyUrl);
+      console.log("Verification response:", verificationResponse);
       setStatus("Verification email sent! Check your inbox (and spam).");
 
       // Redirect to verify page
       setTimeout(() => navigate("/verify"), 1500);
     } catch (error) {
       console.error("Signup error details:", error);
-      setStatus("Error: " + (error.message || "Unknown error occurred"));
+      if (error.message.includes("Invalid `url` param")) {
+        setStatus(
+          "Error: Invalid verification URL. Check VITE_APP_URL in environment variables."
+        );
+      } else if (error.message.includes("Failed to fetch")) {
+        setStatus("Error: Connection issue. Check CORS settings or network.");
+      } else {
+        setStatus(
+          "Error: " +
+            (error.message ||
+              "Unknown error occurred. Check console for details.")
+        );
+      }
     } finally {
       setIsLoading(false);
     }
