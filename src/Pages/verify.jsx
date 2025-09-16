@@ -21,7 +21,9 @@ const Verify = () => {
           setStatus("Verification failed: " + error.message);
         }
       };
-      verifyEmail();
+      verifyEmail().catch((error) => {
+        setStatus("Verification failed: " + error.message);
+      });
     } else {
       setStatus("Invalid verification link. Please try again.");
     }
