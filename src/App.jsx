@@ -16,6 +16,7 @@ import Pricing from "./Pages/Pricing";
 import Dashboard from "./Pages/Dashboard";
 import Verify from "./Pages/verify";
 import ResetPassword from "./Component/resetPassword";
+import ForgotPassword from "./Component/ForgotPassword";
 
 function AppLayout() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function AppLayout() {
     "/dashboard",
     "/verify",
     "/resetPassword",
+    "/forgotPassword",
   ];
 
   // Check if current path matches one of the hidden routes
@@ -46,6 +48,7 @@ function AppLayout() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/verify" element={<Verify />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
       </Routes>
       {!hideLayout && <Footer />}
     </div>

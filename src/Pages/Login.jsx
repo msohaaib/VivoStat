@@ -55,29 +55,6 @@ const Login = () => {
     }
   };
 
-  // New: Forgot Password function
-  const handleForgotPassword = async (e) => {
-    e.preventDefault();
-    if (!form.email) {
-      setStatus("Please enter your email");
-      return;
-    }
-    setIsLoading(true);
-    setStatus("");
-
-    const resetUrl = import.meta.env.VITE_APP_URL + "/resetPassword";
-    console.log("Sending reset with:", { email: form.email, url: resetUrl });
-
-    try {
-      await account.createRecovery(form.email, resetUrl);
-      setStatus("Password reset email sent! Check your inbox.");
-    } catch (error) {
-      setStatus("Error: " + error.message);
-      console.error("Forgot password error:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -172,14 +149,12 @@ const Login = () => {
             </div>
 
             <div className="flex justify-end text-sm">
-              <button
-                type="button"
+              <Link
+                to="/forgotPassword"
                 className="text-blue-400 hover:text-blue-300"
-                onClick={handleForgotPassword}
-                disabled={isLoading}
               >
                 Forgot password?
-              </button>
+              </Link>
             </div>
 
             <button
