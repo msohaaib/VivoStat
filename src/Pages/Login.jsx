@@ -55,6 +55,30 @@ const Login = () => {
     }
   };
 
+  // New: Forgot Password function
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    if (!form.email) {
+      setStatus("Please enter your email");
+      return;
+    }
+    setIsLoading(true);
+    setStatus("");
+    const resetUrl = import.meta.env.VITE_APP_URL + "/resetPassword"; // Define explicitly
+    console.log("Sending reset with:", { email: form.email, url: resetUrl });
+    try {
+      await account.createRecovery({
+        email: form.email,
+        url: resetUrl,
+      });
+      setStatus("Password reset email sent! Check your inbox.");
+    } catch (error) {
+      setStatus("Error: If an account exists, a reset email was sent.");
+      console.error("Forgot password error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -119,6 +143,7 @@ const Login = () => {
                   setForm((prev) => ({ ...prev, email: e.target.value }))
                 }
                 className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400"
+                disabled={isLoading}
               />
             </div>
 
@@ -134,11 +159,13 @@ const Login = () => {
                     setForm((prev) => ({ ...prev, password: e.target.value }))
                   }
                   className="w-full px-3 py-2 pr-10 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400"
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                  disabled={isLoading}
                 >
                   {showPassword ? "🙈" : "👁️"}
                 </button>
@@ -149,7 +176,8 @@ const Login = () => {
               <button
                 type="button"
                 className="text-blue-400 hover:text-blue-300"
-                onClick={() => alert("Forgot password feature coming soon!")}
+                onClick={handleForgotPassword}
+                disabled={isLoading}
               >
                 Forgot password?
               </button>
@@ -160,7 +188,7 @@ const Login = () => {
               disabled={isLoading}
               className="w-full bg-gradient-to-r from-[rgb(33,49,48)] to-[rgb(33,49,76)] hover:from-[rgb(33,49,76)] hover:to-[rgb(33,49,48)] text-white rounded-lg h-11 font-medium transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
             >
-              {isLoading ? "Signing In..." : "Sign In →"}
+              {isLoading ? "Processing..." : "Sign In →"}
             </button>
           </motion.form>
 
