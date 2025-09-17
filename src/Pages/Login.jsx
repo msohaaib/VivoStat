@@ -64,16 +64,15 @@ const Login = () => {
     }
     setIsLoading(true);
     setStatus("");
-    const resetUrl = import.meta.env.VITE_APP_URL + "/resetPassword"; // Define explicitly
+
+    const resetUrl = import.meta.env.VITE_APP_URL + "/resetPassword";
     console.log("Sending reset with:", { email: form.email, url: resetUrl });
+
     try {
-      await account.createRecovery({
-        email: form.email,
-        url: resetUrl,
-      });
+      await account.createRecovery(form.email, resetUrl);
       setStatus("Password reset email sent! Check your inbox.");
     } catch (error) {
-      setStatus("Error: If an account exists, a reset email was sent.");
+      setStatus("Error: " + error.message);
       console.error("Forgot password error:", error);
     } finally {
       setIsLoading(false);

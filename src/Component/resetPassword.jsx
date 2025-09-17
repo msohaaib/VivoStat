@@ -44,11 +44,12 @@ const ResetPassword = () => {
     }
 
     try {
-      await account.updateRecovery({
-        userId: userId,
-        secret: secret,
-        password: form.newPassword,
-      });
+      await account.updateRecovery(
+        userId,
+        secret,
+        form.newPassword,
+        form.confirmPassword
+      );
       setStatus("Password reset successfully! Redirecting to login...");
       setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
