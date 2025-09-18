@@ -1,4 +1,4 @@
-import { Client, Account, ID, Functions, Databases } from "appwrite";
+import { Client, Account, ID } from "appwrite";
 
 const client = new Client()
   .setEndpoint(
