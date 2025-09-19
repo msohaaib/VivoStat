@@ -1,5 +1,4 @@
-import { useState } from "react";
-import profile from "../assets/HeroIcons/instagram.svg";
+import { useState, useEffect, lazy } from "react";
 import {
   FaFacebookF,
   FaTwitter,
@@ -8,181 +7,131 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
-import { RiGalleryView } from "react-icons/ri";
+import { RiGalleryView, RiSettings3Line } from "react-icons/ri";
+import SidebarItem from "../Component/SidebarItem";
+
+const DashboardMainContent = lazy(() =>
+  import("../Component/DashboardMainContent")
+); // Lazy load for performance
+
+const channels = [
+  { name: "All Channels", icon: <RiGalleryView size={20} /> },
+  { name: "Facebook", icon: <FaFacebookF size={20} /> },
+  { name: "Twitter", icon: <FaTwitter size={20} /> },
+  { name: "Instagram", icon: <FaInstagram size={20} /> },
+  { name: "LinkedIn", icon: <FaLinkedinIn size={20} /> },
+];
 
 export default function Dashboard() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState("All Channels");
 
+  // Responsive sidebar collapse
+  useEffect(() => {
+    const handleResize = () => {
+      setIsCollapsed(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden dark:bg-gray-900">
       {/* Topbar */}
-      <header className="flex items-center justify-between bg-gray-800 text-white px-6 py-3 shadow">
-        {/* Left side: Logo + Navigation */}
-        <div className="flex items-center space-x-10">
-          <div className="font-bold text-xl">MyLogo</div>
-          <nav className="flex space-x-6">
-            <button className="hover:text-gray-300">Publish</button>
-            <button className="hover:text-gray-300">Engage</button>
-            <button className="hover:text-gray-300">Analyze</button>
-            <button className="hover:text-gray-300">Template</button>
+      <header className="flex items-center justify-between bg-red-900 text-white px-4 py-3 shadow-md md:px-6">
+        <div className="flex items-center space-x-6 md:space-x-10">
+          <div className="font-bold text-lg md:text-xl">VivoStat</div>
+          <nav className="flex space-x-4 md:space-x-6">
+            <button
+              className="hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Publish"
+            >
+              Publish
+            </button>
+            <button
+              className="hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Engage"
+            >
+              Engage
+            </button>
+            <button
+              className="hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Analyze"
+            >
+              Analyze
+            </button>
+            <button
+              className="hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Template"
+            >
+              Template
+            </button>
           </nav>
         </div>
-
-        {/* Right side: Profile Picture */}
         <div className="flex items-center space-x-4">
           <img
-            src={profile}
+            src="https://placehold.co/40x40" // Replace with optimized asset URL
             alt="Profile"
-            className="w-10 h-10 rounded-full border-2 border-white cursor-pointer"
+            className="w-8 h-8 rounded-full border-2 border-white cursor-pointer md:w-10 md:h-10"
           />
         </div>
       </header>
 
       {/* Content Area */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <aside
           className={`${
             isCollapsed ? "w-16" : "w-64"
-          } bg-gray-100 border-r flex flex-col transition-all duration-300`}
+          } bg-gray-100 border-r flex flex-col transition-all duration-300 ease-in-out dark:bg-gray-800 dark:border-gray-700`}
         >
-          {/* Expand/Collapse button */}
           <div className="flex justify-end p-2">
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-1 rounded hover:bg-gray-200"
+              className="p-1 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-700"
+              aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
               {isCollapsed ? (
-                <FaChevronRight size={18} />
+                <FaChevronRight size={20} />
               ) : (
-                <FaChevronLeft size={18} />
+                <FaChevronLeft size={20} />
               )}
             </button>
           </div>
-
-          {/* Channels */}
-          <div className="flex-1 px-2 space-y-2">
-            <SidebarItem
-              icon={<RiGalleryView size={18} />}
-              label="All Channels"
-              collapsed={isCollapsed}
-              onClick={() => setSelectedChannel("All Channels")}
-              isActive={selectedChannel === "All Channels"}
-            />
-            <SidebarItem
-              icon={<FaFacebookF size={18} />}
-              label="Facebook"
-              collapsed={isCollapsed}
-              onClick={() => setSelectedChannel("Facebook")}
-              isActive={selectedChannel === "Facebook"}
-            />
-            <SidebarItem
-              icon={<FaTwitter size={18} />}
-              label="Twitter"
-              collapsed={isCollapsed}
-              onClick={() => setSelectedChannel("Twitter")}
-              isActive={selectedChannel === "Twitter"}
-            />
-            <SidebarItem
-              icon={<FaInstagram size={18} />}
-              label="Instagram"
-              collapsed={isCollapsed}
-              onClick={() => setSelectedChannel("Instagram")}
-              isActive={selectedChannel === "Instagram"}
-            />
-            <SidebarItem
-              icon={<FaLinkedinIn size={18} />}
-              label="LinkedIn"
-              collapsed={isCollapsed}
-              onClick={() => setSelectedChannel("LinkedIn")}
-              isActive={selectedChannel === "LinkedIn"}
-            />
+          <div className="flex-1 px-2 space-y-2 overflow-y-auto">
+            {channels.map((channel) => (
+              <SidebarItem
+                key={channel.name}
+                icon={channel.icon}
+                label={channel.name}
+                collapsed={isCollapsed}
+                onClick={() => setSelectedChannel(channel.name)}
+                isActive={selectedChannel === channel.name}
+              />
+            ))}
           </div>
-
-          {/* Manage Channels */}
-          <div className="p-3 border-t">
-            <button className="text-blue-600 hover:underline text-sm">
-              Manage Channels
-            </button>
+          <div className="p-3 flex items-center space-x-2 border-t dark:border-gray-700">
+            <RiSettings3Line
+              size={20}
+              className="text-gray-600 dark:text-gray-300"
+            />
+            {!isCollapsed && (
+              <button
+                className="text-blue-600 hover:underline text-sm dark:text-blue-400"
+                aria-label="Manage Channels"
+              >
+                Manage Channels
+              </button>
+            )}
           </div>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 bg-white">
-          <h1 className="text-2xl font-semibold mb-4">{selectedChannel}</h1>
-          <MainContent selectedChannel={selectedChannel} />
+        <main className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
+          <DashboardMainContent selectedChannel={selectedChannel} />
         </main>
       </div>
-    </div>
-  );
-}
-
-// Sidebar Item Component
-function SidebarItem({ icon, label, collapsed, onClick, isActive }) {
-  return (
-    <div
-      onClick={onClick}
-      className={`flex items-center space-x-3 p-2 rounded cursor-pointer transition ${
-        isActive
-          ? "bg-blue-100 text-blue-600"
-          : "hover:bg-gray-200 text-gray-700"
-      }`}
-    >
-      {icon}
-      {!collapsed && <span>{label}</span>}
-    </div>
-  );
-}
-
-// Dynamic Main Content Component
-function MainContent({ selectedChannel }) {
-  switch (selectedChannel) {
-    case "All Channels":
-      return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <ChannelCard name="Facebook" />
-          <ChannelCard name="Twitter" />
-          <ChannelCard name="Instagram" />
-          <ChannelCard name="LinkedIn" />
-        </div>
-      );
-    case "Facebook":
-      return (
-        <p>📘 Manage your Facebook posts, insights, and engagement here.</p>
-      );
-    case "Twitter":
-      return (
-        <p>
-          🐦 View and schedule tweets, track engagement, and manage analytics.
-        </p>
-      );
-    case "Instagram":
-      return (
-        <p>📸 Manage Instagram posts, reels, and audience insights here.</p>
-      );
-    case "LinkedIn":
-      return (
-        <p>
-          💼 Track LinkedIn company page, posts, and professional engagement.
-        </p>
-      );
-    default:
-      return <p>Select a channel to view details.</p>;
-  }
-}
-
-// Card for All Channels View
-function ChannelCard({ name }) {
-  return (
-    <div className="p-4 border rounded-lg shadow hover:shadow-md transition">
-      <h2 className="text-lg font-semibold">{name}</h2>
-      <p className="text-gray-600 mt-2">
-        Connect and manage your {name} account.
-      </p>
-      <button className="mt-3 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
-        Connect
-      </button>
     </div>
   );
 }
